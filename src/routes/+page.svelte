@@ -4,9 +4,9 @@
   import { sanitize } from "$lib/sanitize.js";
 
   let mapDiv;
-  let chartDiv; // main chart
-  let chartDiv2; // second chart
-  let chartDiv3; // third chart
+  let chartDiv;
+  let chartDiv2;
+  let chartDiv3;
   let L;
 
   onMount(async () => {
@@ -28,6 +28,9 @@
       { name: "Museum", coords: [51.503, -0.091], image: "/museum.jpg", category: "museum" }
     ];
 
+    // Store markers so we can update popups
+    const markers = {};
+
     // Create category layers
     const layers = {
       coffee: L.layerGroup().addTo(map),
@@ -35,13 +38,31 @@
       museum: L.layerGroup().addTo(map)
     };
 
+    // GLOBAL delete function for popup button
+    window.deletePoiImage = (name) => {
+      const poi = pois.find((p) => p.name === name);
+      if (!poi) return;
+
+      poi.image = null;
+
+      // Update popup content
+      markers[name].setPopupContent(`
+        <b>${sanitize(poi.name)}</b><br>
+        <button onclick="window.deletePoiImage('${poi.name}')">Delete Image</button>
+      `);
+    };
+
     // Add markers to category layers
     pois.forEach((poi) => {
-      const marker = L.marker(poi.coords, { draggable: true }).bindPopup(`
-      <b>${sanitize(poi.name)}</b><br>
-      <img src="${sanitize(poi.image)}" width="150" style="margin-top:5px;">
-    `);
+      const marker = L.marker(poi.coords, { draggable: true });
 
+      marker.bindPopup(`
+        <b>${sanitize(poi.name)}</b><br>
+        ${poi.image ? `<img src="${sanitize(poi.image)}" width="150" style="margin-top:5px;"><br>` : ""}
+        <button onclick="window.deletePoiImage('${poi.name}')">Delete Image</button>
+      `);
+
+      markers[poi.name] = marker;
       layers[poi.category].addLayer(marker);
     });
 
