@@ -18,6 +18,17 @@
       maxZoom: 19
     }).addTo(map);
 
+    // POIs
+    const pois = [
+      { name: "Coffee Shop", coords: [51.505, -0.09] },
+      { name: "Library", coords: [51.507, -0.088] },
+      { name: "Museum", coords: [51.503, -0.091] }
+    ];
+
+    pois.forEach((poi) => {
+      L.marker(poi.coords).addTo(map).bindPopup(`<b>${poi.name}</b>`);
+    });
+
     // ECharts
     const chart = echarts.init(chartDiv);
 
