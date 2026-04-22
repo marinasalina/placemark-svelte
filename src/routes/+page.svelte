@@ -20,13 +20,28 @@
 
     // POIs
     const pois = [
-      { name: "Coffee Shop", coords: [51.505, -0.09] },
-      { name: "Library", coords: [51.507, -0.088] },
-      { name: "Museum", coords: [51.503, -0.091] }
+      {
+        name: "Coffee Shop",
+        coords: [51.505, -0.09],
+        image: "/coffee.jpg"
+      },
+      {
+        name: "Library",
+        coords: [51.507, -0.088],
+        image: "/library.jpg"
+      },
+      {
+        name: "Museum",
+        coords: [51.503, -0.091],
+        image: "/museum.jpg"
+      }
     ];
 
     pois.forEach((poi) => {
-      L.marker(poi.coords).addTo(map).bindPopup(`<b>${poi.name}</b>`);
+      L.marker(poi.coords, { draggable: true }).addTo(map).bindPopup(`
+      <b>${poi.name}</b><br>
+      <img src="${poi.image}" width="150" style="margin-top:5px;">
+    `);
     });
 
     // ECharts
