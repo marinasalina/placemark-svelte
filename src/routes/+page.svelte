@@ -21,19 +21,38 @@
       maxZoom: 19
     }).addTo(map);
 
-    // POIs
+    // POIs with categories
     const pois = [
-      { name: "Coffee Shop", coords: [51.505, -0.09], image: "/coffee.jpg" },
-      { name: "Library", coords: [51.507, -0.088], image: "/library.jpg" },
-      { name: "Museum", coords: [51.503, -0.091], image: "/museum.jpg" }
+      { name: "Coffee Shop", coords: [51.505, -0.09], image: "/coffee.jpg", category: "coffee" },
+      { name: "Library", coords: [51.507, -0.088], image: "/library.jpg", category: "library" },
+      { name: "Museum", coords: [51.503, -0.091], image: "/museum.jpg", category: "museum" }
     ];
 
+    // Create category layers
+    const layers = {
+      coffee: L.layerGroup().addTo(map),
+      library: L.layerGroup().addTo(map),
+      museum: L.layerGroup().addTo(map)
+    };
+
+    // Add markers to category layers
     pois.forEach((poi) => {
-      L.marker(poi.coords, { draggable: true }).addTo(map).bindPopup(`
-          <b>${sanitize(poi.name)}</b><br>
-          <img src="${sanitize(poi.image)}" width="150" style="margin-top:5px;">
-        `);
+      const marker = L.marker(poi.coords, { draggable: true }).bindPopup(`
+      <b>${sanitize(poi.name)}</b><br>
+      <img src="${sanitize(poi.image)}" width="150" style="margin-top:5px;">
+    `);
+
+      layers[poi.category].addLayer(marker);
     });
+
+    // Layer control
+    L.control
+      .layers(null, {
+        "Coffee Shops": layers.coffee,
+        Libraries: layers.library,
+        Museums: layers.museum
+      })
+      .addTo(map);
 
     // -----------------------------
     // CHART 1 — BAR CHART
