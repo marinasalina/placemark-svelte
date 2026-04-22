@@ -1,35 +1,68 @@
 <script>
   import { onMount } from "svelte";
+  import * as echarts from "echarts";
 
   let mapDiv;
+  let chartDiv;
+  let L;
 
   onMount(async () => {
+    // Load Leaflet dynamically
     const leaflet = await import("leaflet");
-    const L = leaflet.default;
+    L = leaflet.default;
 
-    const map = L.map(mapDiv).setView([53.3498, -6.2603], 13);
+    // Map
+    const map = L.map(mapDiv).setView([51.505, -0.09], 13);
 
-    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      maxZoom: 19,
-      attribution: "© OpenStreetMap contributors"
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19
     }).addTo(map);
 
-    setTimeout(() => map.invalidateSize(), 200);
+    // ECharts
+    const chart = echarts.init(chartDiv);
+
+    const options = {
+      title: { text: "Single Chart" },
+      tooltip: {},
+      xAxis: { data: ["A", "B", "C", "D", "E"] },
+      yAxis: {},
+      series: [
+        {
+          name: "Values",
+          type: "bar",
+          data: [5, 20, 36, 10, 15]
+        }
+      ]
+    };
+
+    chart.setOption(options);
+
+    window.addEventListener("resize", () => chart.resize());
   });
 </script>
 
-<div class="page">
-  <div id="map" bind:this={mapDiv}></div>
+<div class="container">
+  <div class="left" bind:this={mapDiv}></div>
+  <div class="right">
+    <div id="chart" bind:this={chartDiv}></div>
+  </div>
 </div>
 
 <style>
-  .page {
-    height: 100%;
-    width: 100%;
+  .container {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
   }
-
-  #map {
-    height: 100%;
+  .left {
+    flex: 1;
+  }
+  .right {
+    flex: 1;
+    padding: 20px;
+  }
+  #chart {
     width: 100%;
+    height: 100%;
   }
 </style>

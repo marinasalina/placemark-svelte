@@ -9,7 +9,7 @@
 
     const options = {
       title: {
-        text: "Simple Example Chart"
+        text: "Single Chart"
       },
       tooltip: {},
       xAxis: {
@@ -27,7 +27,6 @@
 
     chart.setOption(options);
 
-    // Resize chart when window changes
     window.addEventListener("resize", () => chart.resize());
   });
 </script>
