@@ -1,6 +1,7 @@
 <script>
   import * as echarts from "echarts";
   import { onMount } from "svelte";
+  import { sanitize } from "$lib/sanitize.js";
 
   let chartDiv;
 
@@ -9,16 +10,16 @@
 
     const options = {
       title: {
-        text: "Single Chart"
+        text: sanitize("Single Chart")
       },
       tooltip: {},
       xAxis: {
-        data: ["A", "B", "C", "D", "E"]
+        data: ["A", "B", "C", "D", "E"].map(sanitize)
       },
       yAxis: {},
       series: [
         {
-          name: "Values",
+          name: sanitize("Values"),
           type: "bar",
           data: [5, 20, 36, 10, 15]
         }

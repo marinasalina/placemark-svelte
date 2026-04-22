@@ -1,6 +1,7 @@
 <script>
   import { onMount } from "svelte";
   import * as echarts from "echarts";
+  import { sanitize } from "$lib/sanitize.js";
 
   let mapDiv;
   let chartDiv;
@@ -39,8 +40,8 @@
 
     pois.forEach((poi) => {
       L.marker(poi.coords, { draggable: true }).addTo(map).bindPopup(`
-      <b>${poi.name}</b><br>
-      <img src="${poi.image}" width="150" style="margin-top:5px;">
+      <b>${sanitize(poi.name)}</b><br>
+      <img src="${sanitize(poi.image)}" width="150" style="margin-top:5px;">
     `);
     });
 
