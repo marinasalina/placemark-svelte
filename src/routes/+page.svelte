@@ -23,9 +23,27 @@
 
     // POIs with categories
     const pois = [
-      { name: "Coffee Shop", coords: [51.505, -0.09], image: "/coffee.jpg", category: "coffee" },
-      { name: "Library", coords: [51.507, -0.088], image: "/library.jpg", category: "library" },
-      { name: "Museum", coords: [51.503, -0.091], image: "/museum.jpg", category: "museum" }
+      {
+        name: "Coffee Shop",
+        coords: [51.505, -0.09],
+        image: "/coffee.jpg",
+        originalImage: "/coffee.jpg",
+        category: "coffee"
+      },
+      {
+        name: "Library",
+        coords: [51.507, -0.088],
+        image: "/library.jpg",
+        originalImage: "/library.jpg",
+        category: "library"
+      },
+      {
+        name: "Museum",
+        coords: [51.503, -0.091],
+        image: "/museum.jpg",
+        originalImage: "/museum.jpg",
+        category: "museum"
+      }
     ];
 
     // Store markers so we can update popups
@@ -38,18 +56,30 @@
       museum: L.layerGroup().addTo(map)
     };
 
-    // GLOBAL delete function for popup button
+    // delete function for popup button
     window.deletePoiImage = (name) => {
       const poi = pois.find((p) => p.name === name);
       if (!poi) return;
 
       poi.image = null;
 
-      // Update popup content
       markers[name].setPopupContent(`
-        <b>${sanitize(poi.name)}</b><br>
-        <button onclick="window.deletePoiImage('${poi.name}')">Delete Image</button>
-      `);
+    <b>${sanitize(poi.name)}</b><br>
+    <button onclick="window.restorePoiImage('${poi.name}')">Restore Image</button>
+  `);
+    };
+
+    window.restorePoiImage = (name) => {
+      const poi = pois.find((p) => p.name === name);
+      if (!poi) return;
+
+      poi.image = poi.originalImage;
+
+      markers[name].setPopupContent(`
+    <b>${sanitize(poi.name)}</b><br>
+    <img src="${sanitize(poi.image)}" width="150" style="margin-top:5px;"><br>
+    <button onclick="window.deletePoiImage('${poi.name}')">Delete Image</button>
+  `);
     };
 
     // Add markers to category layers
